@@ -70,7 +70,7 @@ a)  Create a new repository on GitHub in your account named
     we are able to see it for grading. Add the link to the repository
     below:
  
-git remote add origin https://github.com/cansubaader/exeRcise-sheet-3.git
+git remote add origin git@github.com:cansubaader/exeRcise-sheet-3.git
 git branch -M main
 git push -u origin main 
 
