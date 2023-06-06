@@ -72,7 +72,8 @@ a)  Create a new repository on GitHub in your account named
  
 git remote add origin https://github.com/cansubaader/exeRcise-sheet-3.git
 git branch -M main
-git push -u origin main
+git push -u origin main 
+
 
 b)  Push your code to this new repository by copying and executing the
     snippet on github listed under
