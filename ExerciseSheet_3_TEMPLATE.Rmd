@@ -113,19 +113,94 @@ View(given_names_2022)
 is.numeric(given_names_2021$Anzahl)
 is.numeric(given_names_2022$Anzahl)
 ```
+"Anzahl" is not numeric because some names are given "4 oder weniger", not just in numbers but in letters/ words. 
 
+```{r}
+given_names_2021 <- given_names_2021 %>% 
+    na_if("4 oder weniger") 
+
+given_names_2022 <- given_names_2022 %>% 
+    na_if("4 oder weniger")
+
+given_names_2021 <- coalesce(given_names_2021, 0) 
+
+given_names_2022 <- coalesce(given_names_2022, 0)
+
+
+head(given_names_2021)
+tail(given_names_2021)
+ 
+given_names_2021 %>% 
+    arrange(Anzahl)
+
+ 
+ 
+
+ 
+
+```
+
+Since "4 oder weniger" has letters and cannot be numeric my idea was to remove the NAs with the result that only the numbers stay in the datasets 
 
 c)  Calculate the total number of babies born in Munich in 2022
     and 2021. Which year had the bigger baby-boom?
+    
+```{r}
+#totat_sum_babies_2022 <- sum(given_names_2022$Anzahl)
+
+
+#total_sum_babies_2021 <- sum(given_names_2021$Anzahl)
+```
+```{r}
+Vornamen <- given_names_2022 %>% 
+    select( Anzahl, Vorname, year) 
+
+Vornamen
+```
+
 
 d)  Add a new column `year` to both datasets which holds the correct
     year for each.
+    
+```{r}
+ 
+
+given_names_2021 <- given_names_2021 %>% 
+    mutate(year = 2021) 
+     
+
+given_names_2022 <- given_names_2022 %>% 
+    mutate(year = 2022) 
+
+View(given_names_2021)
+View(given_names_2022)
+ 
+```
+
 
 e)  Combine both datasets into one using `bind_rows()`.
+
+```{r}
+library(dplyr)
+given_names <- bind_rows(given_names_2021, given_names_2022, by = year)
+View(given_names)
+```
+
 
 f)  Combine the counts for same names to determine the most popular
     names across both years. Print out the top 10 names in a nicely
     formatted table for both years. Include a table caption.
+
+```{r}
+ 
+
+top_ten_names <- given_names %>%
+  group_by(Anzahl) %>%
+  summarize(total_count = sum(Anzahl)) %>%
+  arrange(desc(total_count)) %>%
+  top_n(10)
+
+```
 
 ## Exercise 4: Chat GPT + apply (3 points)
 
