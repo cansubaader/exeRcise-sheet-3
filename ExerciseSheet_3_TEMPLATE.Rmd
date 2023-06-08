@@ -116,26 +116,20 @@ is.numeric(given_names_2022$Anzahl)
 "Anzahl" is not numeric because some names are given "4 oder weniger", not just in numbers but in letters/ words. 
 
 ```{r}
-given_names_2021 <- given_names_2021 %>% 
-    na_if("4 oder weniger") 
+#given_names_2021 <- given_names_2021 %>% 
+#    na_if("4 oder weniger") %>%
+#    na.omit(given_names_2021)
 
-given_names_2022 <- given_names_2022 %>% 
-    na_if("4 oder weniger")
-
-given_names_2021 <- coalesce(given_names_2021, 0) 
-
-given_names_2022 <- coalesce(given_names_2022, 0)
+#given_names_2022 <- given_names_2022 %>% 
+#    na_if("4 oder weniger") %>% 
+#    na.omit(given_names_2022)
 
 
 head(given_names_2021)
 tail(given_names_2021)
- 
-given_names_2021 %>% 
-    arrange(Anzahl)
 
- 
- 
-
+head(given_names_2022) 
+tail(given_names_2022)
  
 
 ```
@@ -146,24 +140,22 @@ c)  Calculate the total number of babies born in Munich in 2022
     and 2021. Which year had the bigger baby-boom?
     
 ```{r}
+
+#given_names_2021 <- as.numeric(given_names_2021$Anzahl)
+#given_names_2022 <- as.numeric(given_names_2022$Anzahl)
 #totat_sum_babies_2022 <- sum(given_names_2022$Anzahl)
 
 
 #total_sum_babies_2021 <- sum(given_names_2021$Anzahl)
 ```
-```{r}
-Vornamen <- given_names_2022 %>% 
-    select( Anzahl, Vorname, year) 
-
-Vornamen
-```
-
+ 
 
 d)  Add a new column `year` to both datasets which holds the correct
     year for each.
     
 ```{r}
- 
+library(dplyr)
+library(tidyverse)
 
 given_names_2021 <- given_names_2021 %>% 
     mutate(year = 2021) 
@@ -172,8 +164,10 @@ given_names_2021 <- given_names_2021 %>%
 given_names_2022 <- given_names_2022 %>% 
     mutate(year = 2022) 
 
-View(given_names_2021)
-View(given_names_2022)
+head(given_names_2021) 
+head(given_names_2022)
+
+sum(given_names_2021$year)
  
 ```
 
@@ -182,8 +176,10 @@ e)  Combine both datasets into one using `bind_rows()`.
 
 ```{r}
 library(dplyr)
-given_names <- bind_rows(given_names_2021, given_names_2022, by = year)
-View(given_names)
+given_names <- bind_rows(given_names_2021, given_names_2022)
+
+head(given_names)
+ 
 ```
 
 
@@ -197,8 +193,8 @@ f)  Combine the counts for same names to determine the most popular
 top_ten_names <- given_names %>%
   group_by(Anzahl) %>%
   summarize(total_count = sum(Anzahl)) %>%
-  arrange(desc(total_count)) %>%
-  top_n(10)
+  arrange(desc(total_count))
+ 
 
 ```
 
@@ -288,72 +284,3 @@ print(result)
 
 Make sure to push all your commits and changes to GitHub before
 submittining the exercise sheet.
-
-
-prompts: 
-I used the task as prompt: The code below does not work because the wrong apply function has
-    been used. Find out which apply function would be correct and why it
-    did not work. Correct the code. Also calculate the rowwise means.
-
-Solution: 
-"The issue in the provided code lies with the usage of the lapply function. The second argument of lapply is supposed to be the function to be applied to each element of the input object. In this case, 2 is being used as the function, which is incorrect.
-
-To calculate the column-wise means, you can use the colMeans function instead. 
-
-# Create a sample data frame
-tax_data <- data.frame(Name = c("Munich GmbH", "ABC Inc.", "Backpacks 1980", "Bavarian Circus"),
-                       Tax_2019 = c(5000, 4000, 6000, 3500),
-                       Tax_2020 = c(4800, 4200, 5800, 3700),
-                       Tax_2021 = c(5200, 3800, 5900, 3400))
-
-# Calculate column-wise means
-column_means <- colMeans(tax_data[, -1])
-
-# Calculate row-wise means
-row_means <- rowMeans(tax_data[, -1])
-
-# Display the column-wise means
-column_means
-
-# Display the row-wise means
-row_means
-
-The correct function is `ColMeans` and `rowMeans`. 
-"The corrected code uses the colMeans function to calculate the column-wise means and the rowMeans function to calculate the row-wise means. The column-wise means are stored in the column_means variable, and the row-wise means are stored in the row_means variable."
-
-b)  Using ChatGPT try to understand what the rapply() function does.
-    Create an easy example with mock data where the function is used and
-    explain it in your words.
-    
-prompt: 
-what does the rapply() function do? create an easy example with mock data where the function is used. 
-Solution: 
-
-"The rapply() function in R is a recursive version of the base apply() function. It is designed to apply a given function to all elements of a list or nested list structure, including nested lists within lists. It traverses the structure recursively, applying the function to each element."
-
-in my own words: 
-
-code provided by chat gpt: 
-# Create a nested list structure
-nested_list <- list(
-  a = 1,
-  b = list(
-    c = 2,
-    d = list(
-      e = 3,
-      f = 4
-    )
-  ),
-  g = 5
-)
-
-# Define a function to increment each element by 1
-increment <- function(x) {
-  x + 1
-}
-
-# Apply the increment function to all elements of the nested list structure
-result <- rapply(nested_list, increment, how = "replace")
-
-# Print the modified nested list structure
-print(result)
